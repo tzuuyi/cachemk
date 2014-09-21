@@ -1,5 +1,5 @@
 #makeCacheMatrix function is to get inverse of a matrix and save the data in 
-#an object.
+#an object
 makeCacheMatrix <- function(x = matrix()) {
         m <- NULL
         set <- function(y) {
@@ -7,7 +7,8 @@ makeCacheMatrix <- function(x = matrix()) {
                 m <<- NULL
         }
         get <- function() x
-	  setsol <- function(solve) m <<- solve
+	  #setsol <- function(solve) m <<- solve
+	  setsol <- function(x) m <<- solve(x)
         getsol <- function() m
         list(set = set, get = get,
              setsol = setsol,
@@ -18,16 +19,15 @@ makeCacheMatrix <- function(x = matrix()) {
 #it will check first if the same matrix has its inverse 
 #already.  If not, it will use solve function to get it.
 cacheSolve <- function(x = matrix, ...) {
-	  #keep getting error $operator is invalid for atomic vector
-	  #but use x[x[...]] and getting NA instead, so function
-	  #that gets matrix is different?
-        m <- x$getsol()
+	  #how to test cached scenario? So far, everytime use solve again.
+        d <- makeCacheMatrix(x)
+	  m <- d$getsol()
         if(!is.null(m)) {
                 message("getting cached data")
                 return(m)
         }
-        data <- x$get()
+        data <- d$get()
         m <- solve(data, ...)
-        x$setsol(m)
+        d$setsol(m)
         m
 }
